@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Website Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Static Website Generator</h1>
+        <form id="websiteForm">
+            <textarea id="features" rows="10" placeholder="Enter the features for your website here..."></textarea>
+            <button type="button" onclick="generateWebsite()">Generate Website</button>
+        </form>
+        <div id="loading" style="display: none;">Loading...</div>
+        <div id="error" style="color: red;"></div>
+        <div id="result"></div>
+    </div>
+    <script>
+        async function generateWebsite() {
+            document.getElementById('loading').style.display = 'block'; // Show loading indicator
+            const features = document.getElementById('features').value;
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ features: features })
+            });
+
+            const result = await response.json();
+            document.getElementById('loading').style.display = 'none'; // Hide loading indicator
+
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            if (result.success) {
+                resultDiv.innerHTML = '<h2>Generated Files:</h2>';
+                Object.keys(result.files).forEach(fileName => {
+                    // Create a download link for each file
+                    const downloadLink = `<a href="/download/${fileName}" download>${fileName}</a>`;
+                    resultDiv.innerHTML += `<div>${downloadLink}</div>`;
+                });
+
+                // Create a link to preview the generated website
+                resultDiv.innerHTML += '<h2>Click to preview the generated website:</h2>';
+                const previewLink = document.createElement('a');
+                previewLink.href = '/generated_website/index.html'; // Assuming index.html is the main file
+                previewLink.target = '_blank';
+                previewLink.innerText = 'Click here to preview';
+                resultDiv.appendChild(previewLink);
+
+                errorDiv.textContent = '';  // Clear any previous error messages
+            } else {
+                resultDiv.innerHTML = '';
+                errorDiv.textContent = 'Error: ' + result.error;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Website Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Static Website Generator</h1>
+        <form id="websiteForm">
+            <textarea id="features" rows="10" placeholder="Enter the features for your website here..."></textarea>
+            <button type="button" onclick="generateWebsite()">Generate Website</button>
+        </form>
+        <div id="loading" style="display: none;">Loading...</div>
+        <div id="error" style="color: red;"></div>
+        <div id="result"></div>
+    </div>
+    <script>
+        async function generateWebsite() {
+            document.getElementById('loading').style.display = 'block'; // Show loading indicator
+            const features = document.getElementById('features').value;
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ features: features })
+            });
+
+            const result = await response.json();
+            document.getElementById('loading').style.display = 'none'; // Hide loading indicator
+
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            if (result.success) {
+                resultDiv.innerHTML = '<h2>Generated Files:</h2>';
+                Object.keys(result.files).forEach(fileName => {
+                    // Create a download link for each file
+                    const downloadLink = `<a href="/download/${fileName}" download>${fileName}</a>`;
+                    resultDiv.innerHTML += `<div>${downloadLink}</div>`;
+                });
+
+                // Create an iframe to display the generated website
+                const previewFrame = document.createElement('iframe');
+                previewFrame.src = '/generated_website/index.html'; // Assuming index.html is the main file
+                previewFrame.style.width = '100%';
+                previewFrame.style.height = '600px';
+                resultDiv.appendChild(previewFrame);
+
+                errorDiv.textContent = '';  // Clear any previous error messages
+            } else {
+                resultDiv.innerHTML = '';
+                errorDiv.textContent = 'Error: ' + result.error;
+            }
+        }
+    </script>
+</body>
+</html>-->
+
+
+
+
+
