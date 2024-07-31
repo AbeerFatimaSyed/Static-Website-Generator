@@ -52,7 +52,7 @@ This project is a static website generator built using Flask and LangChain with 
 3. Enter the desired features for your website and click "Generate Website". The generated files will be available for download and preview.
 
 ## Project Structure
-
+``` bash
 static-website-generator/
 │
 ├── templates/
@@ -69,4 +69,5 @@ static-website-generator/
 ├── back.py
 ├── config.py
 └── requirements.txt
+```
  
